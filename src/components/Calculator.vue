@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-row class="text-left justify-center mt-12">
+    <v-row class="text-left justify-center">
       <div class="width-600">
         <h3>
           Calculator
@@ -9,9 +9,9 @@
           Default values do not imply return expectations. Change them up as necessary.
         </p>
         <v-row>
-          <v-col cols="8">
+          <v-col cols="7">
             <v-row>
-              <v-col cols="6" md="6" sm="12" xs="12">
+              <v-col cols="12" md="6" sm="6" xs="12" class="mobile-px-0">
                 <vuetify-money
                   flat
                   solo
@@ -22,7 +22,7 @@
                   :options="kcsStackedOption"
                 />
               </v-col>
-              <v-col cols="6" md="6" sm="12" xs="12">
+              <v-col cols="12" md="6" sm="6" xs="12" class="mobile-px-0">
                 <vuetify-money
                   v-model="kcsOwn"
                   class="input-color-green"
@@ -33,7 +33,7 @@
               </v-col>
             </v-row>
             <v-row>
-              <v-col cols="6" md="6" sm="12" xs="12">
+              <v-col cols="12" md="6" sm="6" xs="12" class="mobile-px-0">
                 <vuetify-money
                   v-model="dailyVolume"
                   class="input-color-green"
@@ -42,18 +42,81 @@
                   :options="suffixUSD"
                 />
               </v-col>
-              <v-col cols="6" md="6" sm="12" xs="12">
-                <vuetify-money
-                  v-model="averageTradingFee"
-                  class="input-color-green"
-                  label="Average Trading Fee"
-                  :outlined="false"
-                  :options="suffixPercent"
-                />
+              <v-col cols="12" md="6" sm="6" xs="12" class="mobile-px-0">
+                <div class="input-color-green average-fee">
+                  <label>Average Trading Fee</label>
+                  <input type="number" v-model="averageTradingFee" />
+                  <span> % </span>
+                </div>
               </v-col>
             </v-row>
+            <v-row class="show-desktop">
+              <v-col cols="12">
+                <v-row>
+                  <v-col cols="6" md="6" sm="6" xs="6">
+                    <vuetify-money
+                      v-model="tradingFeeCollected"
+                      class="input-color-green"
+                      label="Trading fees collected"
+                      :outlined="false"
+                      :options="suffixUSD"
+                      :readonly="true"
+                    />
+                  </v-col>
+                  <v-col cols="6" md="6" sm="6" xs="6" class="d-flex align-center">
+                    <v-btn
+                      color="success"
+                    >
+                      Sign Up Now
+                    </v-btn>
+                  </v-col>
+                </v-row>
+              </v-col>
+            </v-row>
+            <v-row class="show-desktop">
+              <v-col cols="12">
+                <v-row>
+                  <v-col cols="12">
+                    <v-btn
+                      color="default"
+                      small
+                      @click="initValues"
+                    >
+                      Reset Values
+                    </v-btn>
+                  </v-col>
+                </v-row>
+              </v-col>
+            </v-row>
+          </v-col>
+          <v-col cols="5">
+            <h4>
+              Expected Rewards
+            </h4>
+            <v-spacer />
+            <h5>
+              $
+              <span> {{rewardDay}} </span><br/>
+              <span class="date-opacity-7"> per day </span>
+            </h5>
+            <v-spacer />
+            <h5>
+              $
+              <span> {{rewardMonth}} </span><br/>
+              <span class="date-opacity-7"> per month </span>
+            </h5>
+            <v-spacer />
+            <h5>
+              $
+              <span> {{rewardYear}} </span><br/>
+              <span class="date-opacity-7"> per year </span>
+            </h5>
+          </v-col>
+        </v-row>
+        <v-row class="show-mobile">
+          <v-col cols="12">
             <v-row>
-              <v-col cols="6" md="6" sm="12" xs="12">
+              <v-col cols="6" md="6" sm="6" xs="6">
                 <vuetify-money
                   v-model="tradingFeeCollected"
                   class="input-color-green"
@@ -63,7 +126,7 @@
                   :readonly="true"
                 />
               </v-col>
-              <v-col cols="6" md="6" sm="12" xs="12" class="d-flex justify-center align-center">
+              <v-col cols="6" md="6" sm="6" xs="6" class="d-flex align-center">
                 <v-btn
                   color="success"
                 >
@@ -71,6 +134,10 @@
                 </v-btn>
               </v-col>
             </v-row>
+          </v-col>
+        </v-row>
+        <v-row class="show-mobile">
+          <v-col cols="12" class="show-mobile">
             <v-row>
               <v-col cols="12">
                 <v-btn
@@ -82,29 +149,6 @@
                 </v-btn>
               </v-col>
             </v-row>
-          </v-col>
-          <v-col cols="4">
-            <h4>
-              Expected Rewards
-            </h4>
-            <v-spacer />
-            <h5>
-              $
-              <span> {{rewardDay}} </span>
-              <span class="opacity-7"> Day </span>
-            </h5>
-            <v-spacer />
-            <h5>
-              $
-              <span> {{rewardMonth}} </span>
-              <span class="opacity-7"> Month </span>
-            </h5>
-            <v-spacer />
-            <h5>
-              $
-              <span> {{rewardYear}} </span>
-              <span class="opacity-7"> Year </span>
-            </h5>
           </v-col>
         </v-row>
       </div>
@@ -230,13 +274,66 @@ label {
 
 h5 {
   margin-top: 1rem;
+  font-size: 18px;
+  opacity: .8;
+  font-weight: 500;
 }
 
-.opacity-7 {
-  color: rgb(0 0 0 / 70%);
+.date-opacity-7 {
+  opacity: .5;
+  font-weight: 400;
+  font-size: 18px;
+  color: #000000de;
 }
 
 .width-600 {
   max-width: 600px;
+  margin: 1rem;
+}
+
+@media only screen and (max-width: 768px) {
+  .mobile-px-0 {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
+  .show-desktop {
+    display: none !important;
+  }
+
+  .show-mobile {
+    display: flex !important;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .show-desktop {
+    display: flex !important;
+  }
+
+  .show-mobile {
+    display: none !important;
+  }
+}
+
+p {
+  font-size: 12px;
+  margin-bottom: 40px !important;
+}
+
+.average-fee {
+  position: relative;
+}
+.average-fee input {
+  outline: none;
+  width: 100%;
+}
+.average-fee span {
+    position: absolute;
+    top: 24px;
+    right: 0;
+    background: white;
+    width: 30px;
+    height: 25px;
 }
 </style>

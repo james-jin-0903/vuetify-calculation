@@ -12,7 +12,7 @@
       </div>
     </v-app-bar>
 
-    <v-main>
+    <v-main class="d-flex align-center">
       <calculator />
     </v-main>
 
